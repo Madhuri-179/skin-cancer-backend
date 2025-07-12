@@ -1,7 +1,0 @@
-services:
-  - type: web
-    name: skin-cancer-backend
-    env: python
-    buildCommand: "./.render-build.sh"
-    startCommand: "gunicorn app:app"
-    plan: free
