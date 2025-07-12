@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Floating Bubbles - Register</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"/>
+  <style>
+    /* Style for the floating bubbles container */
+    .bubbles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    /* Styling for individual bubbles */
+    .bubble {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      background: rgba(255, 255, 255, 0.6); /* Light bubbles */
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      opacity: 0.7;
+      filter: blur(3px); /* Apply blur effect */
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.8); /* Apply glow effect */
+    }
+
+    /* Basic style for the page */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #fff;
+      min-height: 100vh;
+      margin: 0;
+      background: linear-gradient(to right, #141e30, #243b55);
+      background-attachment: fixed;
+      overflow: hidden;
+    }
+
+    /* Style for content in the center */
+    .content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .glass-card {
+        background: rgba(255, 255, 255, 0.2); /* Light background with more color */
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 123, 255, 0.3); /* Adjusted shadow color and size */
+        backdrop-filter: blur(15px); /* Increase the blur for more of a glass effect */
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        text-align: center;
+        font-family: 'Times New Roman', Times, serif;
+        width: 90%;
+        max-width: 600px;
+        background: linear-gradient(to right,rgb(31, 34, 59),rgb(20, 42, 84)); /* Gradient color */
+        color: white; /* Change text color to white for contrast */
+      }
+
+    h2 {
+      font-weight: bold;
+    }
+
+    .form-group label {
+      font-weight: bold;
+      color: #fff;
+    }
+
+    .form-control {
+      background-color: rgb(239, 235, 235);
+      color: Black;
+      border: none;
+      box-shadow: 0 0 10px white;
+      transition: box-shadow 0.3s ease-in-out;
+    }
+
+    .form-control:focus {
+      background-color: rgb(244, 241, 241);
+      box-shadow: 0 0 15px white;
+    }
+
+    .btn-primary {
+      background-color:rgb(20, 165, 88);
+      border-color:rgb(36, 156, 106);
+      width: 100%;
+    }
+
+    a {
+      color: #87cefa;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Container for bubbles -->
+  <div class="bubbles">
+    <!-- 30 bubbles with different shapes -->
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+  </div>
+
+  <!-- Main content -->
+  <div class="content">
+    <div class="glass-card">
+      <h2 class="mb-4">Registration</h2>
+      <form id="registrationForm">
+        <div class="form-group">
+          <label for="username">Username:</label>
+          <input type="text" class="form-control" id="username" name="username" required />
+        </div>
+        <div class="form-group">
+          <label for="password">New Password:</label>
+          <input type="password" class="form-control" id="password" name="password" required />
+        </div>
+        <div class="form-group">
+            <label for="password"> Confirm Password:</label>
+            <input type="password" class="form-control" id="password" name="password" required />
+          </div>
+          <br>
+          <br>
+        <button type="submit" class="btn btn-primary">Register</button>
+      </form>
+      <p class="mt-3">Already have an account? <a href="login.html">Login here</a></p>
+    </div>
+  </div>
+
+<script>
+    window.onload = () => {
+      const bubbles = document.querySelectorAll('.bubble');
+      const windowWidth = window.innerWidth;
+      const windowHeight = window.innerHeight;
+  
+      // Apply random positions and velocities to each bubble
+      bubbles.forEach((bubble) => {
+        setRandomPositionAndVelocity(bubble);
+      });
+  
+      // Function to set random position and velocity
+      function setRandomPositionAndVelocity(bubble) {
+        const startX = Math.random() * windowWidth;
+        const startY = Math.random() * windowHeight;
+        const velocityX = (Math.random() - 0.5) * 2; // Random velocity on X axis
+        const velocityY = (Math.random() - 0.5) * 2; // Random velocity on Y axis
+  
+        bubble.style.left = `${startX}px`;
+        bubble.style.top = `${startY}px`;
+  
+        bubble.velocityX = velocityX;
+        bubble.velocityY = velocityY;
+      }
+  
+      // Move bubbles and handle edge repulsion
+      function moveBubbles() {
+        bubbles.forEach((bubble) => {
+          let x = parseFloat(bubble.style.left);
+          let y = parseFloat(bubble.style.top);
+  
+          // Move bubble according to its velocity
+          x += bubble.velocityX;
+          y += bubble.velocityY;
+  
+          // If the bubble hits the left or right edge, reverse X direction (repel)
+          if (x <= 0 || x >= windowWidth - 40) {
+            bubble.velocityX = -bubble.velocityX; // reverse horizontal direction
+          }
+  
+          // If the bubble hits the top or bottom edge, reverse Y direction (repel)
+          if (y <= 0 || y >= windowHeight - 40) {
+            bubble.velocityY = -bubble.velocityY; // reverse vertical direction
+          }
+  
+          // Apply the new position
+          bubble.style.left = `${x}px`;
+          bubble.style.top = `${y}px`;
+        });
+  
+        requestAnimationFrame(moveBubbles);
+      }
+  
+      moveBubbles(); // Start the animation
+    };
+  
+    // Handle form submission and redirect to http://127.0.0.1:8080 after registration
+    const registrationForm = document.getElementById('registrationForm');
+    registrationForm.addEventListener('submit', (event) => {
+      event.preventDefault(); // Prevent the default form submission
+  
+      // Simulate registration success
+      setTimeout(() => {
+        window.location.href = 'http://127.0.0.1:8080/'; // Redirect to the local server
+      }, 1000); // You can adjust the delay as needed
+    });
+</script>
+  
+</body>
+</html>

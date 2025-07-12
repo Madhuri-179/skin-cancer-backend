@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Detection Result</title>
+  <link href="style.css" rel="stylesheet">
+  <style>
+    /* Ensure the video spans the entire viewport */
+    .background-video {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: -2;
+        filter: blur(8px);
+    }
+
+    body {
+        font-family: 'Times-new-roman';
+        color: #fff;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        margin: 0;
+        background: linear-gradient(to right, #141e30, #243b55); /* Fallback background */
+    }
+
+    .glass-card {
+        background: rgba(255, 255, 255, 0.08);
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        width: 90%;
+        max-width: 600px;
+        text-align: center;
+    }
+
+    h1, h3 {
+        font-weight: bold;
+    }
+
+    .result-box {
+        background: rgba(0, 0, 0, 0.6);
+        padding: 40px;
+        border-radius: 25px;
+        box-shadow: 0 0 25px rgba(255, 255, 255, 0.6);
+        text-align: center;
+        width: 80%;
+        max-width: 700px;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        margin-top: 50px; /* Space between the result box and map */
+    }
+
+    h2 {
+        color: #fff;
+        font-size: 2.5rem;
+        font-weight: bold;
+    }
+
+    h4 {
+        font-size: 1.3rem;
+        color: #dcdcdc;
+        margin-bottom: 30px;
+    }
+
+    .disclaimer {
+        margin-top: 30px;
+    }
+
+    .footer-links a {
+        color: #1f77b4;
+        text-decoration: none;
+        margin: 0 15px;
+        font-size: 1.1rem;
+    }
+
+    .footer-links a:hover {
+        color: #1565c0;
+    }
+
+    /* Scrollable map container */
+    .map-container {
+        height: 600px; /* Map height */
+        width: 90%;
+        max-width: 800px;
+        margin-top: 50px; /* Space above the map */
+        overflow: hidden; /* Hide excess overflow */
+        border-radius: 15px;
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+        margin-bottom: 50px; /* Optional space at the bottom */
+    }
+
+    /* Leaflet map styles */
+    #map {
+        height: 100%; /* Full container height */
+        border-radius: 10px;
+    }
+
+    .btn {
+        background-color: #1f77b4; /* Bright blue */
+        color: white;
+        font-size: 1.2rem;
+        border-radius: 30px;
+        padding: 12px 30px;
+        text-align: center;
+        margin-top: 30px;
+        transition: background-color 0.3s, transform 0.2s ease-in-out;
+    }
+
+    .btn:hover {
+        background-color: #1565c0; /* Darker blue on hover */
+        transform: scale(1.05);
+    }
+  </style>
+</head>
+
+<body>
+    <!-- Background video element -->
+    <video class="background-video" autoplay muted loop>
+        <source src="static/videos/video.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <div class="overlay"></div> <!-- Optional overlay to darken the background for readability -->
+
+    <div class="container">
+        <div class="result-box">
+            <h2>Diagnosed with: <span style="color: #00ffcc;">{{ result }}</span></h2>
+            <h4>{{ info }}</h4>
+
+            <div class="disclaimer">
+                <h5>DISCLAIMER: Please consult a dermatologist immediately for proper diagnosis and treatment.</h5>
+            </div>
+
+            <div class="footer-links">
+                <p>➡️ <a href="https://colab.research.google.com/drive/1y8RwsFvlhpXC2uGxSbw5QdGmAQv7Ia10#scrollTo=zHD0F5NBKgIR" target="_blank">Read the complete blog</a></p>
+                <p>➡️ <a href="https://github.com/Madhuri-179?tab=repositories" target="_blank">Check out the GitHub code</a></p>
+            </div>
+
+            <a class="btn" href="/">Try Another Image</a>
+        </div>
+    </div>
+
+    <!-- Scrollable map section -->
+    <div class="map-container">
+        <div id="map"></div>
+    </div>
+
+    <!-- Leaflet JS & CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+        var map = L.map('map').setView([22.9734, 78.6569], 5.3); // India centered
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+        var hospitals = [
+        { name: "Tata Memorial Hospital, Mumbai", lat: 18.9986, lon: 72.8413 },
+        { name: "AIIMS, New Delhi", lat: 28.5672, lon: 77.2100 },
+        { name: "Adyar Cancer Institute, Chennai", lat: 13.0108, lon: 80.2425 },
+        { name: "Kidwai Memorial Institute, Bengaluru", lat: 12.9224, lon: 77.5965 },
+        { name: "Rajiv Gandhi Cancer Institute, New Delhi", lat: 28.6996, lon: 77.1204 },
+        { name: "Apollo Cancer Centre, Chennai", lat: 13.0616, lon: 80.2498 },
+        { name: "Regional Cancer Centre, Thiruvananthapuram", lat: 8.5241, lon: 76.9366 },
+        { name: "Gujarat Cancer Research Institute, Ahmedabad", lat: 23.0274, lon: 72.5884 },
+        { name: "HCG Cancer Centre, Bengaluru", lat: 12.9716, lon: 77.5946 },
+        { name: "Max Super Speciality Hospital, New Delhi", lat: 28.5577, lon: 77.2066 },
+        { name: "Fortis Memorial Research Institute, Gurgaon", lat: 28.4595, lon: 77.0610 },
+        { name: "Medanta – The Medicity, Gurgaon", lat: 28.4087, lon: 77.0400 },
+        { name: "The Bombay Hospital & Medical Research Centre, Mumbai", lat: 18.9778, lon: 72.8263 },
+        { name: "St. John's Medical College, Bengaluru", lat: 12.9569, lon: 77.6083 },
+        { name: "Dr. B. Borooah Cancer Institute, Guwahati", lat: 26.1589, lon: 91.7458 },
+        { name: "Sankara Nethralaya, Chennai", lat: 13.0502, lon: 80.2295 },
+        { name: "BGS Gleneagles Global Hospital, Bengaluru", lat: 12.9181, lon: 77.5968 },
+        { name: "Kokilaben Dhirubhai Ambani Hospital, Mumbai", lat: 19.1043, lon: 72.8204 },
+        { name: "Shankar Netralaya, Chennai", lat: 13.0878, lon: 80.2710 },
+        { name: "MGM Healthcare, Chennai", lat: 13.0473, lon: 80.2405 }
+    ];
+    
+  
+
+        hospitals.forEach(h => {
+            L.marker([h.lat, h.lon]).addTo(map).bindPopup(`<b>${h.name}</b>`);
+        });
+    </script>
+</body>
+
+</html>
