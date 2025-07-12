@@ -5,3 +5,8 @@ services:
     buildCommand: "./.render-build.sh"
     startCommand: "gunicorn app:app"
     plan: free
+    buildFilter:
+      paths:
+        - .render-build.sh
+        - requirements.txt
+        - runtime.txt
